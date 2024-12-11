@@ -1,0 +1,88 @@
+/* Contêiner principal */
+.pedidos-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+  }
+  
+  .pedidos-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Lista de pedidos */
+  .pedidos-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  /* Card do pedido */
+  .pedido-card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    padding: 20px;
+    margin: 10px;
+    transition: transform 0.3s ease;
+  }
+  
+  .pedido-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Título do pedido */
+  .pedido-title {
+    font-size: 1.2em;
+    color: #007BFF;
+    margin-bottom: 10px;
+  }
+  
+  /* Itens do pedido */
+  .pedido-items {
+    margin-bottom: 20px;
+  }
+  
+  .pedido-items ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .pedido-items .item {
+    background-color: #f9f9f9;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+  }
+  
+  .pedido-items .item span {
+    display: block;
+    color: #555;
+  }
+  
+  /* Valor total */
+  .pedido-total {
+    background-color: #f8f8f8;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-top: 15px;
+  }
+  
+  .pedido-total p {
+    margin: 0;
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 768px) {
+    .pedido-card {
+      width: 100%;
+    }
+  }
+  

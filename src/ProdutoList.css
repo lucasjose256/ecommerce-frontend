@@ -1,0 +1,93 @@
+/* Estilos gerais */
+.produto-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin: 20px;
+  }
+  
+  .produto-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    width: 250px;
+    text-align: center;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Mais profundidade no sombreamento */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transição suave */
+  }
+  
+  .produto-card:hover {
+    transform: translateY(-5px); /* Elevação ao passar o mouse */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Sombra mais intensa no hover */
+  }
+  
+  .produto-image {
+    width: 100%;
+    height: 200px; /* Ajuste fixo de altura para as imagens */
+    object-fit: cover; /* Assegura que a imagem preencha o espaço */
+    border-radius: 12px;
+  }
+  
+  .produto-details {
+    margin-top: 15px;
+  }
+  
+  .produto-details h3 {
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .produto-details p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 15px;
+  }
+  
+  .add-to-cart-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease; /* Transição suave para a cor do botão */
+  }
+  
+  .add-to-cart-btn:hover {
+    background-color: #0056b3; /* Cor mais escura ao passar o mouse */
+  }
+ .btn-pagar{
+    background-color: aquamarine;
+ }
+
+  h2 {
+    margin-top: 30px;
+    font-size: 1.8rem;
+    color: #333;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .produto-card {
+      width: 100%; /* No celular, os cards ocupam toda a largura */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .produto-list {
+      gap: 15px;
+      margin: 10px;
+    }
+  }
+  
