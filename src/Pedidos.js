@@ -5,7 +5,27 @@ import './Pedidos.css';
 
 function Pedidos() {
   const [pedidos, setPedidos] = useState([]);
+  const [notificacoes, setNotificacoes] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const eventSource = new EventSource('http://localhost:5152/sse');
+
+    eventSource.onmessage = function (event) {
+      const item = event.data; // Pode ser string ou JSON, dependendo do formato enviado
+      console.log("Nova notificação recebida:", item);
+      setNotificacoes(prev => [...prev, item]);
+    };
+
+    eventSource.onerror = (error) => {
+      console.error("Erro na conexão SSE:", error);
+      eventSource.close();
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, []);
 
   useEffect(() => {
     axios.get('http://localhost:5053/pedidos')
@@ -28,6 +48,19 @@ function Pedidos() {
   return (
     <div className="pedidos-container">
       <h1>Pedidos</h1>
+
+      {/* Exibindo as notificações */}
+      <div className="notificacoes-container">
+        <h2>Notificações</h2>
+        <ul>
+          {notificacoes.map((notificacao, idx) => (
+            <li key={idx} className="notificacao-item">
+              <p>{notificacao}</p> {/* Exibindo a notificação */}
+            </li>
+          ))}
+        </ul>
+      </div>
+
       <div className="pedidos-list">
         {pedidos.map((pedido, index) => (
           <div key={index} className="pedido-card">

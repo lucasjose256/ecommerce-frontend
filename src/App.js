@@ -5,11 +5,7 @@ import ProdutoList from './ProdutoList';
 import Carrinho from './Carrinho';
 import Pedidos from './Pedidos';
 import Pagamento from './Pagamento';
-const eventSource = new EventSource("http://localhost:5000/sse");
-
-eventSource.onmessage = function (event) {
-    console.log("Notificação recebida: ", event.data);
-};
+import Notificacoes from "./Notificacoes";
 
 function App() {
   return (
@@ -31,7 +27,7 @@ function App() {
             </li>
           </ul>
         </nav>
-
+        
         <Routes>
           <Route path="/" element={<ProdutoList />} />
           <Route path="/carrinho" element={<Carrinho />} />
