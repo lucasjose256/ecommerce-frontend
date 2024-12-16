@@ -25,9 +25,6 @@ function App() {
             <li>
               <Link to="/pagamento">Pagamentos</Link>
             </li>
-            <li>
-              <Link to="/entrega">Entregas</Link>
-            </li>
           </ul>
         </nav>
         
@@ -36,7 +33,6 @@ function App() {
           <Route path="/carrinho" element={<Carrinho />} />
           <Route path="/pedidos" element={<Pedidos />} />
           <Route path="/" element={<Pedidos />} />
-          <Route path="/entrega" element={<Entregas />} />
           <Route path="/pagamento/:pedidoId" element={<Pagamento />} />
 
         </Routes>

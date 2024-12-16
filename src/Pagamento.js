@@ -1,34 +1,54 @@
-import React, { useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import './Pagamento.css';
 
 function Pagamento() {
   const { pedidoId } = useParams();
   const location = useLocation();
-  const { pedido } = location.state || {};
-
-  // State para os campos do formulário
+  const navigate = useNavigate();
+  const [pedido, setPedido] = useState(location.state?.pedido || null);
   const [formData, setFormData] = useState({
     nome: '',
     endereco: '',
     cartaoCredito: '',
   });
+  const [erro, setErro] = useState('');
 
+  // Busca o pedido caso ele não tenha vindo no estado
+  useEffect(() => {
+    if (!pedido) {
+      fetch(`http://localhost:5053/pedidos/${pedidoId}`)
+        .then((res) => {
+          if (!res.ok) throw new Error('Pedido não encontrado');
+          return res.json();
+        })
+        .then((data) => setPedido(data))
+        .catch((err) => setErro(err.message));
+    }
+  }, [pedido, pedidoId]);
+
+  // Atualiza os valores do formulário
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // Lógica para processar o pagamento
   const handlePagamento = async () => {
+    if (!pedido) {
+      setErro('Pedido não encontrado!');
+      return;
+    }
+
     try {
       const dadosPagamento = {
         PedidoId: pedidoId,
         Status: 'Pendente',
-        Valor: pedido.itens.reduce((total, item) => total + (item.preco * item.quantidade), 0),
+        Valor: pedido.itens.reduce((total, item) => total + item.preco * item.quantidade, 0),
         Nome: formData.nome,
         Endereco: formData.endereco,
       };
-  
+
       const resposta = await fetch(`http://localhost:5053/pagamentos/${pedidoId}`, {
         method: 'POST',
         headers: {
@@ -36,21 +56,26 @@ function Pagamento() {
         },
         body: JSON.stringify(dadosPagamento),
       });
-  
+
       if (resposta.ok) {
         const pedidoAtualizado = await resposta.json();
-        alert(`Pagamento do Pedido ID ${pedidoId} processado! Status: ${pedidoAtualizado.Status}`);
+        alert(`Pagamento processado! Status: ${pedidoAtualizado.Status}`);
+        navigate('/pedidos'); // Navegar para a página de pedidos
       } else {
         throw new Error('Erro ao processar pagamento.');
       }
     } catch (error) {
-      console.error('Erro ao fazer o pagamento:', error);
-      alert('Erro ao processar o pagamento.');
+      console.error(error);
+      setErro(error.message || 'Erro ao processar o pagamento.');
     }
   };
 
+  if (erro) {
+    return <p className="erro">Erro: {erro}</p>;
+  }
+
   if (!pedido) {
-    return <p>Dados do pedido não encontrados!</p>;
+    return <p>Carregando dados do pedido...</p>;
   }
 
   return (
@@ -67,7 +92,7 @@ function Pagamento() {
             </li>
           ))}
         </ul>
-        <p><strong>Valor Total:</strong> R${pedido.itens.reduce((total, item) => total + (item.preco * item.quantidade), 0).toFixed(2)}</p>
+        <p><strong>Valor Total:</strong> R${pedido.itens.reduce((total, item) => total + item.preco * item.quantidade, 0).toFixed(2)}</p>
       </div>
 
       <div className="pagamento-formulario">
@@ -80,6 +105,7 @@ function Pagamento() {
               name="nome"
               value={formData.nome}
               onChange={handleInputChange}
+              required
             />
           </label>
           <br />
@@ -90,6 +116,7 @@ function Pagamento() {
               name="endereco"
               value={formData.endereco}
               onChange={handleInputChange}
+              required
             />
           </label>
           <br />
@@ -100,6 +127,7 @@ function Pagamento() {
               name="cartaoCredito"
               value={formData.cartaoCredito}
               onChange={handleInputChange}
+              required
             />
           </label>
         </form>
