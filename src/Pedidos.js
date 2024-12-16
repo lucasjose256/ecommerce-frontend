@@ -42,7 +42,15 @@ function Pedidos() {
   };
 
   const handlePagamento = (pedido) => {
-    navigate(`/pagamento/${pedido.pedidoId}`, { state: { pedido } });
+    axios.post(`http://localhost:5164/pagamento/${pedido.pedidoId}`, {
+      // Dados do pagamento que você quer enviar
+      nome: pedido.nome,
+      endereco: pedido.endereco,
+      valor: pedido.itens.reduce((total, item) => total + item.preco * item.quantidade, 0),
+    })
+      .catch(error => {
+        console.error("Erro ao carregar os pedidos: ", error);
+      });
   };
 
   return (
