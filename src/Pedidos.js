@@ -12,9 +12,9 @@ function Pedidos() {
     const eventSource = new EventSource('http://localhost:5152/sse');
 
     eventSource.onmessage = function (event) {
-      const item = event.data; // Pode ser string ou JSON, dependendo do formato enviado
+      const item = event.data;
       console.log("Nova notificação recebida:", item);
-      setNotificacoes(prev => [...prev, item]);
+      setNotificacoes((prev) => [...prev, item]);
     };
 
     eventSource.onerror = (error) => {
@@ -29,10 +29,10 @@ function Pedidos() {
 
   useEffect(() => {
     axios.get('http://localhost:5053/pedidos')
-      .then(response => {
+      .then((response) => {
         setPedidos(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Erro ao carregar os pedidos: ", error);
       });
   }, []);
@@ -43,13 +43,24 @@ function Pedidos() {
 
   const handlePagamento = (pedido) => {
     axios.post(`http://localhost:5164/pagamento/${pedido.pedidoId}`, {
-      // Dados do pagamento que você quer enviar
       nome: pedido.nome,
       endereco: pedido.endereco,
       valor: pedido.itens.reduce((total, item) => total + item.preco * item.quantidade, 0),
     })
-      .catch(error => {
-        console.error("Erro ao carregar os pedidos: ", error);
+      .catch((error) => {
+        console.error("Erro ao processar o pagamento: ", error);
+      });
+  };
+
+  const handleExcluir = (pedidoId) => {
+    axios.delete(`http://localhost:5053/pedidos/${pedidoId}`)
+      .then(() => {
+        // Remove o pedido excluído da lista de pedidos no estado
+        setPedidos((prevPedidos) => prevPedidos.filter((pedido) => pedido.pedidoId !== pedidoId));
+        console.log(`Pedido ${pedidoId} excluído com sucesso.`);
+      })
+      .catch((error) => {
+        console.error("Erro ao excluir o pedido: ", error);
       });
   };
 
@@ -63,7 +74,7 @@ function Pedidos() {
         <ul>
           {notificacoes.map((notificacao, idx) => (
             <li key={idx} className="notificacao-item">
-              <p>{notificacao}</p> {/* Exibindo a notificação */}
+              <p>{notificacao}</p>
             </li>
           ))}
         </ul>
@@ -88,14 +99,24 @@ function Pedidos() {
               <p><strong>Valor Total:</strong> R${calcularTotal(pedido.itens).toFixed(2)}</p>
             </div>
 
-            {pedido.status === "criado" && (
-              <button 
-                className="btn-pagar" 
-                onClick={() => handlePagamento(pedido)}
-              >
-                Pagar
-              </button>
-            )}
+            <div className="pedido-actions">
+              {pedido.status === "criado" && (
+                <>
+                  <button 
+                    className="btn-pagar" 
+                    onClick={() => handlePagamento(pedido)}
+                  >
+                    Pagar
+                  </button>
+                  <button 
+                    className="btn-excluir" 
+                    onClick={() => handleExcluir(pedido.pedidoId)}
+                  >
+                    Excluir
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         ))}
       </div>
