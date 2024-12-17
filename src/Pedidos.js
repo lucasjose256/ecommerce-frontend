@@ -6,10 +6,11 @@ import './Pedidos.css';
 function Pedidos() {
   const [pedidos, setPedidos] = useState([]);
   const [notificacoes, setNotificacoes] = useState([]);
-  const navigate = useNavigate();
+
 
   useEffect(() => {
-    const eventSource = new EventSource('http://localhost:5152/sse');
+    const eventSource = new EventSou
+    rce('http://localhost:5152/sse');
 
     eventSource.onmessage = function (event) {
       const item = event.data;
@@ -55,7 +56,6 @@ function Pedidos() {
   const handleExcluir = (pedidoId) => {
     axios.delete(`http://localhost:5053/pedidos/${pedidoId}`)
       .then(() => {
-        // Remove o pedido excluído da lista de pedidos no estado
         setPedidos((prevPedidos) => prevPedidos.filter((pedido) => pedido.pedidoId !== pedidoId));
         console.log(`Pedido ${pedidoId} excluído com sucesso.`);
       })
@@ -68,7 +68,7 @@ function Pedidos() {
     <div className="pedidos-container">
       <h1>Pedidos</h1>
 
-      {/* Exibindo as notificações */}
+      {}
       <div className="notificacoes-container">
         <h2>Notificações</h2>
         <ul>
